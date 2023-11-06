@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" /><!--For allowing HTTP-->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">beta.mobatia.in</domain>
+        <domain includeSubdomains="true">192.168.0.164</domain>
+        <domain includeSubdomains="true">http://192.168.0.164</domain>
+        <domain includeSubdomains="true">http://192.168.0.164/nais_dev</domain>
+        <domain includeSubdomains="true">192.168.0.164/nais_dev</domain>
+        <domain includeSubdomains="true">beta.mobatia.in:81</domain>
+        <domain includeSubdomains="true">beta.mobatia.in:81/mobischooldemo</domain>
+        <domain includeSubdomains="true">cms.nasdubai.ae</domain>
+        <domain includeSubdomains="true">mobatia.in</domain>
+        <domain includeSubdomains="true">192.168.0.195</domain>
+        <domain includeSubdomains="true">192.168.0.195/nais</domain>
+        <domain includeSubdomains="true">ec2-34-196-38-254.compute-1.amazonaws.com</domain>
+    </domain-config>
+</network-security-config>

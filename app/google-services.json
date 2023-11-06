@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "40297509770",
+    "firebase_url": "https://naisdubai-163709.firebaseio.com",
+    "project_id": "naisdubai-163709",
+    "storage_bucket": "naisdubai-163709.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40297509770:android:b40cc723f056ff67",
+        "android_client_info": {
+          "package_name": "com.mobatia.naisapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "40297509770-gs3udpi23plv1rinqhgqstjcdbh8nb3n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLw4ukLTrN7jeEtl23fzXySg_TVQ16dOA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
