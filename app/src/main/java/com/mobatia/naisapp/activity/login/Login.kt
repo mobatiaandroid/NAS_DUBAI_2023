@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.EditorInfo
@@ -23,24 +24,25 @@ import com.mobatia.naisapp.activity.home.Home
 import com.mobatia.naisapp.activity.login.model.LoginResponseModel
 import com.mobatia.naisapp.api.APIClient
 import com.mobatia.naisapp.constant.AppUtils
+import com.mobatia.naisapp.constant.GeneralSubmitResponseModel
 import com.mobatia.naisapp.constant.PreferenceManager
 import com.mobatia.naisapp.custom_view.ProgressBarDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Login : AppCompatActivity() {
+class Login : AppCompatActivity(), View.OnTouchListener {
 
     private lateinit var context: Context
-    lateinit var userNameEditText: EditText
-    lateinit var passwordEditText: EditText
-    lateinit var forgotPasswordButton: Button
-    lateinit var guestUserButton: Button
-    lateinit var loginButton: Button
-    lateinit var signUpButton: Button
-    lateinit var inputEmailEditText: EditText
-    lateinit var emailHelpButton: Button
-    lateinit var staffButton: Button
+    private lateinit var userNameEditText: EditText
+    private lateinit var passwordEditText: EditText
+    private lateinit var forgotPasswordButton: Button
+    private lateinit var guestUserButton: Button
+    private lateinit var loginButton: Button
+    private lateinit var signUpButton: Button
+    private lateinit var inputEmailEditText: EditText
+    private lateinit var emailHelpButton: Button
+    private lateinit var staffButton: Button
     lateinit var progressBarDialog: ProgressBarDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,14 +54,15 @@ class Login : AppCompatActivity() {
     }
 
     private fun initialiseUI() {
+        progressBarDialog = ProgressBarDialog(context)
         userNameEditText = findViewById<View>(R.id.userEditText) as EditText
-        userNameEditText.setOnEditorActionListener { v, actionId, event ->
+        userNameEditText.setOnEditorActionListener { _, _, _ ->
             userNameEditText.isFocusable = false
             userNameEditText.isFocusableInTouchMode = false
             false
         }
         passwordEditText = findViewById<View>(R.id.passwordEditText) as EditText
-        passwordEditText.setOnEditorActionListener { v, actionId, event ->
+        passwordEditText.setOnEditorActionListener { _, _, _ ->
             passwordEditText.isFocusable = false
             passwordEditText.isFocusableInTouchMode = false
             false
@@ -72,7 +75,10 @@ class Login : AppCompatActivity() {
         staffButton = findViewById<View>(R.id.staffBtn) as Button
         progressBarDialog = ProgressBarDialog(context)
 
-        userNameEditText.setOnEditorActionListener { v, actionId, event ->
+        userNameEditText.setOnTouchListener(this)
+        passwordEditText.setOnTouchListener(this)
+
+        userNameEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 userNameEditText.isFocusable = false
                 userNameEditText.isFocusableInTouchMode = false
@@ -84,7 +90,7 @@ class Login : AppCompatActivity() {
             }
         }
 
-        passwordEditText.setOnEditorActionListener { v, actionId, event ->
+        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 passwordEditText.isFocusable = false
                 passwordEditText.isFocusableInTouchMode = false
@@ -124,35 +130,355 @@ class Login : AppCompatActivity() {
         }
 
         signUpButton.setOnClickListener {
-
+            showSignUpDialogAlert()
         }
 
         forgotPasswordButton.setOnClickListener {
-
+            showForgotPasswordDialogAlert()
         }
 
         emailHelpButton.setOnClickListener {
-
+            showEmailHelpDialogAlert()
         }
 
         guestUserButton.setOnClickListener {
-
+            PreferenceManager.setUserID(context, "")
+            startActivity(Intent(context, Home::class.java))
         }
 
     }
+
+
+    private fun showEmailHelpDialogAlert() {
+
+        val intent = Intent(Intent.ACTION_SEND)
+        val recipients = arrayOf("communications@nasdubai.ae")
+        intent.putExtra(Intent.EXTRA_EMAIL, recipients)
+        intent.type = "text/html"
+        intent.setPackage("com.google.android.gm")
+        context.startActivity(Intent.createChooser(intent, "Send mail"))
+
+    }
+
+    private fun showForgotPasswordDialogAlert() {
+        val dialog = Dialog(context, R.style.NewDialog)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_forgot_password)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(true)
+        Build.VERSION.SDK_INT
+        inputEmailEditText = dialog.findViewById<View>(R.id.text_dialog) as EditText
+        inputEmailEditText.isFocusable = true
+        inputEmailEditText.isFocusableInTouchMode = true
+        inputEmailEditText.setOnTouchListener(this)
+        dialog.findViewById<View>(R.id.alertHead) as TextView
+        val dialogSubmitButton = dialog
+            .findViewById<View>(R.id.btn_signup) as Button
+
+        dialogSubmitButton.setOnClickListener {
+            AppUtils.hideKeyboard(context, inputEmailEditText)
+            if (!inputEmailEditText.text.toString().trim { it <= ' ' }
+                    .equals("", ignoreCase = true)) {
+                if (AppUtils.isEmailValid(
+                        inputEmailEditText.text
+                            .toString()
+                    )
+                ) {
+                    if (AppUtils.isInternetConnected(context)) {
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                            if (task.isComplete) {
+                                val token = task.result
+                                callForgotPasswordAPI(
+                                    inputEmailEditText.text.trim().toString(),
+                                    token
+                                )
+                            }
+                        }
+                    } else {
+                        AppUtils.showAlertDialogInternetFailure(
+                            context
+                        )
+                    }
+                    dialog.dismiss()
+                } else {
+                    AppUtils.showAlertDialogSingleButton(
+                        resources.getString(R.string.alert_heading),
+                        resources.getString(R.string.invalid_email),
+                        context
+                    )
+
+                }
+            } else {
+                AppUtils.showAlertDialogSingleButton(
+                    resources.getString(R.string.alert_heading),
+                    resources.getString(R.string.enter_email),
+                    context
+                )
+
+            }
+        }
+
+        val negativeButton = dialog.findViewById<View>(R.id.btn_maybelater) as Button
+        negativeButton.setOnClickListener {
+            AppUtils.hideKeyboard(context, inputEmailEditText)
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    private fun callForgotPasswordAPI(emailID: String, token: String?) {
+        progressBarDialog.show()
+        val call: Call<GeneralSubmitResponseModel> = APIClient.getClient.forgotPassword(
+            emailID,
+            token,
+            "2",
+        )
+        call.enqueue(object : Callback<GeneralSubmitResponseModel> {
+            override fun onFailure(call: Call<GeneralSubmitResponseModel>, t: Throwable) {
+                progressBarDialog.dismiss()
+                AppUtils.showAlertDialogSingleButton(
+                    resources.getString(R.string.alert_heading),
+                    resources.getString(R.string.common_error),
+                    context
+                )
+            }
+
+            override fun onResponse(
+                call: Call<GeneralSubmitResponseModel>,
+                response: Response<GeneralSubmitResponseModel>
+            ) {
+                progressBarDialog.dismiss()
+                if (response.body()!!.responseCode.equals("200", ignoreCase = true)) {
+                    val statusCode = response.body()!!.response!!.statusCode
+                    if (statusCode.equals("303", ignoreCase = true)) {
+                        AppUtils.showAlertDialogSingleButton(
+                            resources.getString(R.string.success),
+                            resources.getString(R.string.frgot_success_alert),
+                            context
+                        )
+                    } else if (statusCode.equals("301", ignoreCase = true)) {
+                        AppUtils.showAlertDialogSingleButton(
+                            resources.getString(R.string.error_heading),
+                            resources.getString(R.string.missing_parameter),
+                            context
+                        )
+                    } else if (statusCode.equals("304", ignoreCase = true)) {
+                        AppUtils.showAlertDialogSingleButton(
+                            resources.getString(R.string.error_heading),
+                            resources.getString(R.string.email_exists),
+                            context
+                        )
+                    } else if (statusCode.equals("306", ignoreCase = true)) {
+                        AppUtils.showAlertDialogSingleButton(
+                            resources.getString(R.string.error_heading),
+                            resources.getString(R.string.invalid_email),
+                            context
+                        )
+                    } else if (statusCode.equals("305", ignoreCase = true)) {
+                        AppUtils.showAlertDialogSingleButton(
+                            resources.getString(R.string.error_heading),
+                            resources.getString(R.string.incrct_usernamepswd),
+                            context
+                        )
+                    }
+                } else {
+                    AppUtils.showAlertDialogSingleButton(
+                        resources.getString(R.string.alert_heading),
+                        resources.getString(R.string.common_error),
+                        context
+                    )
+                }
+            }
+        })
+    }
+
+    private fun showSignUpDialogAlert() {
+
+        val dialog = Dialog(context, R.style.NewDialog)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_alert_signup)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(true)
+
+        inputEmailEditText = dialog.findViewById<View>(R.id.text_dialog) as EditText
+        inputEmailEditText.isFocusable = true
+        inputEmailEditText.isFocusableInTouchMode = true
+        inputEmailEditText.setOnTouchListener(this)
+
+        dialog.findViewById<View>(R.id.alertHead) as TextView
+        val dialogSubmitButton = dialog
+            .findViewById<View>(R.id.btn_signup) as Button
+
+        dialogSubmitButton.setOnClickListener {
+            AppUtils.hideKeyboard(context, inputEmailEditText)
+            if (!inputEmailEditText.text.toString().trim { it <= ' ' }
+                    .equals("", ignoreCase = true)) {
+                if (AppUtils.isEmailValid(
+                        inputEmailEditText.text
+                            .toString()
+                    )
+                ) {
+                    if (AppUtils.isInternetConnected(context)) {
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                            if (task.isComplete) {
+                                val token = task.result
+                                callSignUpAPI(inputEmailEditText.text.trim().toString(), token)
+                            }
+                        }
+                    } else {
+                        AppUtils.showAlertDialogInternetFailure(context)
+                    }
+                    dialog.dismiss()
+                } else {
+
+                    AppUtils.showAlertDialogSingleButton(
+                        resources.getString(R.string.alert_heading),
+                        resources.getString(R.string.enter_valid_email),
+                        context
+                    )
+
+                }
+            } else {
+                AppUtils.showAlertDialogSingleButton(
+                    resources.getString(R.string.alert_heading),
+                    resources.getString(R.string.enter_email),
+                    context
+                )
+
+            }
+        }
+
+        val negativeButton = dialog.findViewById<View>(R.id.btn_maybelater) as Button
+        negativeButton.setOnClickListener {
+            AppUtils.hideKeyboard(context, inputEmailEditText)
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    private fun callSignUpAPI(emailID: String, token: String?) {
+        progressBarDialog.show()
+        val call: Call<GeneralSubmitResponseModel> = APIClient.getClient.signUp(
+            emailID,
+            token,
+            "2",
+        )
+        call.enqueue(object : Callback<GeneralSubmitResponseModel> {
+            override fun onFailure(call: Call<GeneralSubmitResponseModel>, t: Throwable) {
+                progressBarDialog.dismiss()
+                AppUtils.showAlertDialogSingleButton(
+                    resources.getString(R.string.alert_heading),
+                    resources.getString(R.string.common_error),
+                    context
+                )
+            }
+
+            override fun onResponse(
+                call: Call<GeneralSubmitResponseModel>,
+                response: Response<GeneralSubmitResponseModel>
+            ) {
+                progressBarDialog.dismiss()
+                if (response.body()!!.responseCode.equals("200", ignoreCase = true)) {
+                    val statusCode = response.body()!!.response!!.statusCode
+                    if (statusCode.equals("303", ignoreCase = true)) {
+                        AppUtils.showAlertDialogSingleButton(
+                            resources.getString(R.string.success),
+                            resources.getString(R.string.signup_success_alert),
+                            context
+                        )
+                    } else if (statusCode.equals("301", ignoreCase = true)) {
+                        AppUtils.showAlertDialogSingleButton(
+                            resources.getString(R.string.error_heading),
+                            resources.getString(R.string.missing_parameter),
+                            context
+                        )
+                    } else if (statusCode.equals("304", ignoreCase = true)) {
+                        AppUtils.showAlertDialogSingleButton(
+                            resources.getString(R.string.error_heading),
+                            resources.getString(R.string.email_exists),
+                            context
+                        )
+                    } else if (statusCode.equals("306", ignoreCase = true)) {
+                        AppUtils.showAlertDialogSingleButton(
+                            resources.getString(R.string.error_heading),
+                            resources.getString(R.string.invalid_email),
+                            context
+                        )
+                    }
+                } else {
+                    AppUtils.showAlertDialogSingleButton(
+                        resources.getString(R.string.alert_heading),
+                        resources.getString(R.string.common_error),
+                        context
+                    )
+                }
+            }
+        })
+    }
+
+    override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
+        when (view) {
+            userNameEditText -> {
+                when (motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        userNameEditText.isFocusable = true
+                        userNameEditText.isFocusableInTouchMode = true
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        view.performClick()
+                        userNameEditText.isFocusable = true
+                        userNameEditText.isFocusableInTouchMode = true
+                    }
+                }
+            }
+
+            passwordEditText -> {
+                when (motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        passwordEditText.isFocusable = true
+                        passwordEditText.isFocusableInTouchMode = true
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        view.performClick()
+                        passwordEditText.isFocusable = true
+                        passwordEditText.isFocusableInTouchMode = true
+                    }
+                }
+            }
+
+            inputEmailEditText -> {
+                when (motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        userNameEditText.isFocusable = true
+                        userNameEditText.isFocusableInTouchMode = true
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        view.performClick()
+                        userNameEditText.isFocusable = true
+                        userNameEditText.isFocusableInTouchMode = true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
 
     private fun callLoginAPI(userName: String, password: String, token: String) {
         val deviceBrand = Build.MANUFACTURER
         val deviceModel = Build.MODEL
         val osVersion = Build.VERSION.RELEASE
-        val devicename = "$deviceBrand $deviceModel $osVersion"
+        val deviceName = "$deviceBrand $deviceModel $osVersion"
         val version: String = BuildConfig.VERSION_NAME
         val androidId = Settings.Secure.getString(
             context.contentResolver,
             Settings.Secure.ANDROID_ID
         )
         progressBarDialog.show()
-        val call: Call<LoginResponseModel> = APIClient.getClient.getLogin(
+        val call: Call<LoginResponseModel> = APIClient.getClient.login(
             "password",
             "testclient",
             "testpass",
@@ -161,7 +487,7 @@ class Login : AppCompatActivity() {
             password,
             token,
             "2",
-            devicename,
+            deviceName,
             version,
             androidId
         )
@@ -182,9 +508,9 @@ class Login : AppCompatActivity() {
                 progressBarDialog.show()
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
-                    val responseData: LoginResponseModel.Response = apiResponse!!.response!!
-                    val statuscode: String = apiResponse.response!!.statuscode!!
-                    if (statuscode == "303") {
+                    apiResponse!!.response!!
+                    val statusCode: String = apiResponse.response!!.statuscode!!
+                    if (statusCode == "303") {
                         PreferenceManager.setAccessToken(
                             context,
                             apiResponse.response!!.responseArray!!.token
@@ -196,40 +522,40 @@ class Login : AppCompatActivity() {
                         PreferenceManager.setUserType(context, "1")
                         PreferenceManager.setUserEmail(
                             context,
-                            userNameEditText.getText().toString()
+                            userNameEditText.text.toString()
                         )
                         showAlertLoginSuccess(
                             context,
-                            "Success",
+                            getString(R.string.success),
                             getString(R.string.login_success_alert),
                             R.drawable.tick,
                             R.drawable.round
                         )
-                    } else if (statuscode.equals("301", ignoreCase = true)) {
+                    } else if (statusCode.equals("301", ignoreCase = true)) {
                         AppUtils.showAlertDialogSingleButton(
                             getString(R.string.error_heading),
                             getString(R.string.missing_parameter),
                             context
                         )
-                    } else if (statuscode.equals("304", ignoreCase = true)) {
+                    } else if (statusCode.equals("304", ignoreCase = true)) {
                         AppUtils.showAlertDialogSingleButton(
                             getString(R.string.error_heading),
                             getString(R.string.email_exists),
                             context
                         )
-                    } else if (statuscode.equals("305", ignoreCase = true)) {
+                    } else if (statusCode.equals("305", ignoreCase = true)) {
                         AppUtils.showAlertDialogSingleButton(
                             getString(R.string.error_heading),
                             getString(R.string.incrct_usernamepswd),
                             context
                         )
-                    } else if (statuscode.equals("306", ignoreCase = true)) {
+                    } else if (statusCode.equals("306", ignoreCase = true)) {
                         AppUtils.showAlertDialogSingleButton(
                             getString(R.string.error_heading),
                             getString(R.string.invalid_email),
                             context
                         )
-                    } else if (statuscode.equals("707", ignoreCase = true)) {
+                    } else if (statusCode.equals("707", ignoreCase = true)) {
                         AppUtils.showAlertDialogSingleButton(
                             getString(R.string.error_heading),
                             getString(R.string.user_expired),

@@ -143,7 +143,7 @@ class PreferenceManager {
             return prefs.getBoolean("is_survey_visible_data", false)
         }
 
-        fun getUserType(context: Context): String? {
+        fun getUserType(context: Context): String {
             var userType = ""
             val prefs = context.getSharedPreferences(
                 PREFSNAME,
@@ -163,7 +163,7 @@ class PreferenceManager {
             editor.apply()
         }
 
-        fun getUserEmail(context: Context): String? {
+        fun getUserEmail(context: Context): String {
             var userid = ""
             val prefs = context.getSharedPreferences(
                 PREFSNAME,

@@ -122,6 +122,91 @@
 
 
     </string-array>
+    <string-array name="navigation_item_names">
+        <item>Home</item>
+        <item>Calendar</item>
+        <item>Notifications</item>
+        <item>Communications</item>
+        <item>Absences</item>
+        <item>Payments</item>
+        <item>Re-Enrolment</item>
+        <item>Lunch Box</item>
+        <item>Music Academy</item>
+        <item>Parent Essentials</item>
+        <item>Early Years</item>
+        <item>Primary</item>
+        <item>Secondary</item>
+        <item>Sixth Form</item>
+        <item>University Guidance</item>
+        <item>Sports</item>
+        <item>Performing Arts</item>
+        <item>Enrichment</item>
+        <item>Parents\' Association</item>
+        <item>Parent Meetings</item>
+        <item>NAE Programmes</item>
+        <item>Reports</item>
+        <item>Permission Forms</item>
+        <item>Gallery</item>
+        <item>About Us</item>
+        <item>Contact Us</item>
+    </string-array>
+
+    <string-array name="navigation_item_icons">
+        <item>@drawable/home_icon</item>
+        <item>@drawable/calendar_icon</item>
+        <item>@drawable/notification_icon</item>
+        <item>@drawable/communication_icon</item>
+        <item>@drawable/absence_icon</item>
+        <item>@drawable/payments_icon</item>
+        <item>@drawable/re_enrollment_icon</item>
+        <item>@drawable/lunchbox_side_icon</item>
+        <item>@drawable/music_icon</item>
+        <item>@drawable/parent_essential_icon</item>
+        <item>@drawable/early_years_icon</item>
+        <item>@drawable/primary_icon</item>
+        <item>@drawable/secondary_icon</item>
+        <item>@drawable/ib_programmes_icon</item>
+        <item>@drawable/university_guidelines_icon</item>
+        <item>@drawable/sports_side_icon</item>
+        <item>@drawable/performing_arts_icon</item>
+        <item>@drawable/enrichment_icon</item>
+        <item>@drawable/parent_association_icon</item>
+        <item>@drawable/parent_meeting_icon</item>
+        <item>@drawable/nae_programme_icon</item>
+        <item>@drawable/reports_icon</item>
+        <item>@drawable/permission_slip_icon</item>
+        <item>@drawable/gallery_icon</item>
+        <item>@drawable/about_us_icon</item>
+        <item>@drawable/contact_us_icon</item>
+    </string-array>
+
+    <string-array name="navigation_item_names_guest">
+        <item>Home</item>
+        <item>Communications</item>
+        <item>Parent Essentials</item>
+        <item>Early Years</item>
+        <item>Primary</item>
+        <item>Secondary</item>
+        <item>Sixth Form</item>
+        <item>Performing Arts</item>
+        <item>NAE Programmes</item>
+        <item>About Us</item>
+        <item>Contact Us</item>
+    </string-array>
+
+    <string-array name="navigation_item_icons_guest">
+        <item>@drawable/home_icon</item>
+        <item>@drawable/communication_icon</item>
+        <item>@drawable/parent_essential_icon</item>
+        <item>@drawable/early_years_icon</item>
+        <item>@drawable/primary_icon</item>
+        <item>@drawable/secondary_icon</item>
+        <item>@drawable/ib_programmes_icon</item>
+        <item>@drawable/performing_arts_icon</item>
+        <item>@drawable/nae_programme_icon</item>
+        <item>@drawable/about_us_icon</item>
+        <item>@drawable/contact_us_icon</item>
+    </string-array>
 
     <string-array name="home_list_content_guest_items">
 
@@ -212,55 +297,55 @@
     <string-array name="home_list_reg_icons">
 
         <!-- 0 wisshsop-->
-        <item>@drawable/home</item>
+        <item>@drawable/home_icon</item>
         <!-- 1 -->
         <!--<item>@drawable/news</item>-->
-        <item>@drawable/calendar</item>
+        <item>@drawable/calendar_icon</item>
         <!-- 2 -->
-        <item>@drawable/notif</item>
+        <item>@drawable/notification_icon</item>
         <!-- 3 -->
-        <item>@drawable/communication</item>
+        <item>@drawable/communication_icon</item>
         <!-- 4 -->
-        <item>@drawable/absence</item>
+        <item>@drawable/absence_icon</item>
         <!-- 4 -->
-        <item>@drawable/payment</item>
-        <item>@drawable/re_enrollment</item>
-        <item>@drawable/lunchbox_sideicon</item>
+        <item>@drawable/payments_icon</item>
+        <item>@drawable/re_enrollment_icon</item>
+        <item>@drawable/lunchbox_side_icon</item>
         <!--        <item>@drawable/lostcard</item>-->
-        <item>@drawable/treble_clef</item>
-        <item>@drawable/parent</item>
+        <item>@drawable/music_icon</item>
+        <item>@drawable/parent_essential_icon</item>
         <!-- 5 -->
-        <item>@drawable/earlyyears</item>
+        <item>@drawable/early_years_icon</item>
         <!-- 6 -->
-        <item>@drawable/primary</item>
+        <item>@drawable/primary_icon</item>
         <!-- 7 -->
-        <item>@drawable/secondary</item>
+        <item>@drawable/secondary_icon</item>
         <!-- 8 -->
-        <item>@drawable/ib</item>
+        <item>@drawable/ib_programmes_icon</item>
 
-        <item>@drawable/university_guidelines</item>
+        <item>@drawable/university_guidelines_icon</item>
 
         <!-- 9 -->
-        <item>@drawable/sports</item>
+        <item>@drawable/sports_side_icon</item>
         <!-- 10 -->
-        <item>@drawable/arts</item>
+        <item>@drawable/performing_arts_icon</item>
         <!--        <item>@drawable/inclusion_wellbeing</item>-->
         <!-- 11 -->
-        <item>@drawable/ccas</item>
-        <item>@drawable/parent_association</item>
-        <item>@drawable/parentevening</item>
+        <item>@drawable/enrichment_icon</item>
+        <item>@drawable/parent_association_icon</item>
+        <item>@drawable/parent_meeting_icon</item>
 
         <!-- 12 -->
-        <item>@drawable/naeprogramme</item>
+        <item>@drawable/nae_programme_icon</item>
         <!-- 13 -->
-        <item>@drawable/report_side</item>
-        <item>@drawable/permission_slip</item>
+        <item>@drawable/reports_icon</item>
+        <item>@drawable/permission_slip_icon</item>
         <!-- 14 -->
-        <item>@drawable/gallery</item>
+        <item>@drawable/gallery_icon</item>
         <!-- 15 -->
-        <item>@drawable/aboutus</item>
+        <item>@drawable/about_us_icon</item>
         <!-- 16 -->
-        <item>@drawable/contacts</item>
+        <item>@drawable/contact_us_icon</item>
         <!-- 17 -->
 
 
@@ -278,7 +363,7 @@
     <string-array name="home_list_guest_icons">
 
         <!-- 0 wisshsop-->
-        <item>@drawable/home</item>
+        <item>@drawable/home_icon</item>
         <!-- 1 -->
         <!--<item>@drawable/news</item>-->
 
@@ -288,24 +373,24 @@
         <!-- 2 -->
         <!--        <item>@drawable/notif</item>-->
         <!-- 3 -->
-        <item>@drawable/communication</item>
+        <item>@drawable/communication_icon</item>
         <!-- 4 -->
-        <item>@drawable/parent</item>
+        <item>@drawable/parent_essential_icon</item>
         <!-- 5 -->
-        <item>@drawable/earlyyears</item>
+        <item>@drawable/early_years_icon</item>
         <!-- 6 -->
-        <item>@drawable/primary</item>
+        <item>@drawable/primary_icon</item>
         <!-- 7 -->
-        <item>@drawable/secondary</item>
+        <item>@drawable/secondary_icon</item>
         <!-- 8 -->
-        <item>@drawable/ib</item>
+        <item>@drawable/ib_programmes_icon</item>
         <!-- 9 -->
         <!-- 10 -->
-        <item>@drawable/arts</item>
+        <item>@drawable/performing_arts_icon</item>
         <!-- 11 -->
         <!--        <item>@drawable/ccas</item>-->
         <!-- 12 -->
-        <item>@drawable/naeprogramme</item>
+        <item>@drawable/nae_programme_icon</item>
         <!-- 13 -->
         <!--
         <item>@drawable/social</item>
@@ -315,9 +400,9 @@
         <item>@drawable/gallery</item>
 -->
         <!-- 15 -->
-        <item>@drawable/aboutus</item>
+        <item>@drawable/about_us_icon</item>
         <!-- 16 -->
-        <item>@drawable/contacts</item>
+        <item>@drawable/contact_us_icon</item>
 
 
     </string-array>
@@ -325,7 +410,7 @@
     <string-array name="home_list_staff_icons">
 
         <!-- 0 wisshsop-->
-        <item>@drawable/home</item>
+        <item>@drawable/home_icon</item>
         <!-- 1 -->
         <!--<item>@drawable/news</item>-->
 
@@ -333,27 +418,27 @@
                 <item>@drawable/calendar</item>
         -->
         <!-- 2 -->
-        <item>@drawable/notif</item>
+        <item>@drawable/notification_icon</item>
         <!-- 3 -->
-        <item>@drawable/communication</item>
+        <item>@drawable/communication_icon</item>
         <!--        <item>@drawable/lunchbox_sideicon</item>-->
         <!-- 4 -->
-        <item>@drawable/parent</item>
+        <item>@drawable/parent_essential_icon</item>
         <!-- 5 -->
-        <item>@drawable/earlyyears</item>
+        <item>@drawable/early_years_icon</item>
         <!-- 6 -->
-        <item>@drawable/primary</item>
+        <item>@drawable/primary_icon</item>
         <!-- 7 -->
-        <item>@drawable/secondary</item>
+        <item>@drawable/secondary_icon</item>
         <!-- 8 -->
-        <item>@drawable/ib</item>
+        <item>@drawable/ib_programmes_icon</item>
         <!-- 9 -->
         <!-- 10 -->
-        <item>@drawable/arts</item>
+        <item>@drawable/performing_arts_icon</item>
         <!-- 11 -->
-        <item>@drawable/ccas</item>
+        <item>@drawable/enrichment_icon</item>
         <!-- 12 -->
-        <item>@drawable/naeprogramme</item>
+        <item>@drawable/nae_programme_icon</item>
         <!-- 13 -->
         <!--
                 <item>@drawable/social</item>
@@ -363,9 +448,9 @@
                 <item>@drawable/gallery</item>
         -->
         <!-- 15 -->
-        <item>@drawable/aboutus</item>
+        <item>@drawable/about_us_icon</item>
         <!-- 16 -->
-        <item>@drawable/contacts</item>
+        <item>@drawable/contact_us_icon</item>
 
 
     </string-array>
@@ -690,5 +775,10 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="may_be_later">May Be Later</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="success">Success</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="feature_unavailable">Feature only accessible for Registered User</string>
 
 </resources>

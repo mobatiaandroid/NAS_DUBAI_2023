@@ -49,7 +49,10 @@ class Tutorial : AppCompatActivity() {
                 PreferenceManager.setIsFirstLaunch(context, false)
                 finish()
             } else {
+                startActivity(Intent(this, Login::class.java))
+                PreferenceManager.setIsFirstLaunch(context, false)
                 finish()
+
             }
 
         }
